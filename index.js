@@ -25,7 +25,7 @@ io.use(function (socket, next) {
 io.on('connection', function (socket) {
 	socket.on('login', function(data) {
 		console.log(data);
-		io.sockets.sockets[socket.id].emit('logged', "Hello " + data + " !");
+		io.sockets.sockets[socket.id].emit('logged', "pute " + data + " !");
 	});
 });
 
