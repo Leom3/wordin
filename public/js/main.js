@@ -4,15 +4,16 @@ $('form').submit((e) => {
   e.preventDefault(); // prevents page reloading
   socket.emit('login', $('#usernameInput').val());
   $('#usernameInput').val('');
+  $('#usernameInput').attr("readonly", true);
   return false;
 });
 
 socket.on('players', (players) => {
+  $('#usernameList').innerHTML("");
   for (player of players) {
     $('#usernameList').append($('<span class="username">').text(player));
   }
   $('.addUsernameButton').addClass("removed");
-  $('#usernameInput').attr("readonly", true);
 });
 
 socket.on('loggedHost', (msg) => {
