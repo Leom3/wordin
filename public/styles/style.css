@@ -16,7 +16,7 @@ h1 {
   margin-top: 300px;
 }
 
-.addUsernameButton {
+.addUsernameButton, .startGameButton {
   cursor: pointer;
   background-color: #393839;
   border: 1px solid black;
@@ -27,7 +27,7 @@ h1 {
   margin-top: 7px;
 }
 
-.addUsernameButton:hover {
+.addUsernameButton:hover, .startGameButton:hover {
   background-color: #222222;
   transition: 0.1s;
 }
