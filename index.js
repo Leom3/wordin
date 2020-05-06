@@ -45,5 +45,5 @@ app.use('/game', game);
 
 app.get('/', function(req, res) {
 	res.status(200);
-	res.sendFile("index.html", { root: "/mnt/c/Users/Sookaz/Desktop/work/wordin/public/views/"})
+	res.sendFile(__dirname + "/public/views/index.html")
 });
