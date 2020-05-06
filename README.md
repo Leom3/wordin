@@ -16,7 +16,7 @@ Joueurs max : 8
 
 ## Page home
 
-* [ ] Choix du pseudo.
+* [x] Choix du pseudo.
 
 * [ ] Le premier à avoir rentré son pseudo est l'hôte.
 
