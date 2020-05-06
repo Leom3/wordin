@@ -1,0 +1,21 @@
+{
+  "name": "wordin",
+  "version": "1.0.0",
+  "description": "Word intruder web game",
+  "author": "lmaignan <leo.maignan@epitech.eu>",
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "start": "./bin/app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "pino": "^6.2.1",
+    "pino-http": "^5.1.0",
+    "pino-pretty": "^4.0.0"
+  }
+}
