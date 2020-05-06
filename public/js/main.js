@@ -12,3 +12,7 @@ socket.on('logged', (msg) => {
   $('.addUsernameButton').addClass("removed");
   $('#usernameInput').attr("readonly", true);
 });
+
+socket.on('error', (msg) => {
+  console.error(msg);  
+});
