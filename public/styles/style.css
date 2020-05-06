@@ -17,9 +17,10 @@ h1 {
 }
 
 .addUsernameButton {
+  cursor: pointer;
   background-color: #393839;
+  border: 1px solid black;
   color: white;
-  border: none;
   width: 173px;
   padding: 5px 0;
   font-size: 0.875rem;
@@ -40,7 +41,9 @@ h1 {
 }
 
 #usernameInput {
-  padding: 3px 0;
+  padding: 5px 2px;
+  border: none;
+  width: 169px;
 }
 
 .removed {
