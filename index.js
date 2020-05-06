@@ -22,21 +22,17 @@ io.use(function (socket, next) {
 	sessionMiddleware(socket.request, socket.request.res, next);
 });
 
-//Usefull mongo functions
-//database.findOneInCollection("Wallets", {"userId" : user_id, "walletType" : "coinbase"}, function(err, wallet) {}
-//database.insertInCollection("Wallets", walletData, function(err, wallet) {
-//database.updateInCollection("Wallets", {"userId" : userId, "walletType" : "coinbase"}, {"$set": {accessToken: tokens.access_token, refreshToken: tokens.refresh_token}}, function(err, updated) {
-//	if (err) {
-//		return 84;
-//	}
-//	if (updated.modifiedCount != 1) {
-//		return 84;
-//	}
-
-io.on('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
+	database.findInCollection("game", {}, function(err, items) {
+		if (err) {
+			io.sockets.sockets[socket.id].emit('error', err);
+		}
+		if (items && items.length > 0)
+			io.emit('players', items[0].players);
+	});
 	socket.on('login', function(data) {
 		console.log(data);
-		var username = data.username;
+		var username = data;
 		socketId = socket.id
 		database.findOneInCollection("users", {"username" : username}, function(err, user) {
 			if (err) {
@@ -62,8 +58,10 @@ io.on('connection', function (socket) {
 									database.insertInCollection("users", {"username" : username, "socketId" : socketId}, function(err, game) {
 										if (err)
 											io.sockets.sockets[socket.id].emit('error', err);	
-										else
-											io.sockets.sockets[socket.id].emit('logginHost', username);
+										else {
+											io.sockets.sockets[socket.id].emit('loggedHost', username);
+											io.emit('players', [username]);
+										}
 									});
 								}
 							});
@@ -78,14 +76,19 @@ io.on('connection', function (socket) {
 								if (err)
 									io.sockets.sockets[socket.id].emit('error', err);
 								if (updated.modifiedCount != 1) {
-									console.log("ERROR UPDATING2");
+									io.sockets.sockets[socket.id].emit('error', "cannot add player");
 								}
 								else {
-									io.sockets.sockets[socket.id].emit('loggin', username);
+									database.findInCollection("game", {}, function(err, items) {
+										if (err) {
+											io.sockets.sockets[socket.id].emit('error', err);
+										}
+										io.emit('players', items[0].players);
+									})
 								}
 							});
 						}
-					});	
+					});
 				}
 			}
 		});
@@ -106,5 +109,5 @@ app.use(bearerToken());
 
 app.get('/', function(req, res) {
 	res.status(200);
-	res.sendFile(__dirname + "/public/views/test.html")
+	res.sendFile(__dirname + "/public/views/index.html")
 });
