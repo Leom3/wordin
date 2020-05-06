@@ -18,9 +18,11 @@ Joueurs max : 8
 
 * [x] Choix du pseudo.
 
-* [ ] Le premier à avoir rentré son pseudo est l'hôte.
+* [x] Le premier à avoir rentré son pseudo est l'hôte.
 
 * [ ] Si trop de joueurs dans le lobby : Page qui renvoie : partie en cours.
+
+* [x] Affichage des pseudos de tous les joueurs
 
 ### Spécificités techniques
 
@@ -93,3 +95,15 @@ Socket on des pseudos
 * [ ] L'autre mot.
 
 * [ ] Un bouton "Nouvelle partie" cliquable par tout le monde
+
+## Mongodb commands
+
+sudo service mongodb start
+
+sudo mongo
+	-> show dbs
+	-> use name_db
+	-> show collections
+	-> db.name_collection.drop()
+	-> db.name_collection.find()
+	-> db.name_collection.insert({obj})
