@@ -56,7 +56,7 @@ Socket on des pseudos
 
 * [ ] Bouton reset en haut à droite : Reset la partie si bug ou autre.
 
-* [ ] Affichage du mot pour le joueur.
+* [X] Affichage du mot pour le joueur.
 
 * [ ] Rappel des règles en haut de la page.
 
