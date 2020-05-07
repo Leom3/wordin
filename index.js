@@ -9,7 +9,8 @@ const bearerToken = require('express-bearer-token');
 const socket = require('socket.io');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const database = require('./src/database')
+const database = require('./src/database');
+const words = require('./src/words.json');
 
 var server = app.listen(8000);
 var io = require('socket.io').listen(server);
@@ -93,6 +94,49 @@ io.sockets.on('connection', function (socket) {
 			}
 		});
 	});
+
+	socket.on('startGame', function(nbTurn) {
+		io.emit('startGame', "test");
+		database.findInCollection("game", {}, function(err, items) {
+			if (err) {
+				io.sockets.sockets[socket.id].emit('error', err);
+			}
+			nbPlayer = items[0].players.length;
+			if (!nbTurn || nbTurn == "") {
+				nbTurn = 20;
+			}
+			console.log("NBTURN : " + nbTurn);
+			console.log("NBPLLAYER : " + nbPlayer);
+			var randTab = [];
+			for (var i = 0; i != nbTurn; i++) {
+				randTab.push(Math.floor(Math.random() * nbPlayer));
+				console.log(randTab);
+			}
+			console.log(randTab);
+			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"randTab": randTab}}, function(err, updated) {
+				if (err)
+					io.sockets.sockets[socket.id].emit('error', err);
+				if (updated.modifiedCount != 1) {
+					io.sockets.sockets[socket.id].emit('error', "cannot add randtab");
+				}
+			});
+		});
+	});
+
+	socket.on('getWord', function(data) {
+		var user = data.user;
+		var turn = data.turn;
+		database.findInCollection("game", {}, function(err, items) {
+			var wordComb = words.gameList[turn];
+			var rand = items[0].randTab[turn];
+			var players = items[0].players;
+			var indexPlayer = players.indexOf(user);
+			if (indexPlayer == rand)
+				io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
+			else
+				io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
+		});
+	})
 });
 
 app.use(sessionMiddleware);
