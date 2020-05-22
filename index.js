@@ -136,7 +136,17 @@ io.sockets.on('connection', function (socket) {
 			else
 				io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
 		});
-	})
+	});
+
+	socket.on('emitClue', function(data) {
+		var user = data.user;
+		var msg = data.msg;
+		database.findInCollection("game", {}, function(err, items) {
+			var players = items[0].players;
+			var indexPlayer = players.indexOf(user);
+			io.emit("getClue", {index : indexPlayer, msg : msg});
+		});
+	});
 });
 
 app.use(sessionMiddleware);
