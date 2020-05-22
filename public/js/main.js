@@ -2,7 +2,7 @@ const socket = io();
 var userName = "";
 var turn = 0;
 
-$('form').submit((e) => {
+$('.usernameForm').submit((e) => {
   e.preventDefault(); // prevents page reloading
   socket.emit('login', $('#usernameInput').val());
   userName = $('#usernameInput').val();
@@ -14,9 +14,10 @@ $('form').submit((e) => {
 
 socket.on('players', (players) => {
   $('#usernameList').html("");
+  $(".playerList").html("");
   for (player of players) {
-    console.log(player);
     $('#usernameList').append($('<span class="username">').text(player));
+    $(".playerList").append(`<div class="player">${player}</div>`);
   }
 });
 
@@ -32,11 +33,23 @@ socket.on('error', (msg) => {
 });
 
 socket.on('startGame', (msg) => {
-  $('.lobbyContainer').html("");
+  $('.lobbyContainer').addClass("hide");
+  $(".gameContainer").removeClass("hide");
   socket.emit('getWord', {"user" : userName, "turn" : 0});
   turn = turn + 1;
 });
 
 socket.on('getWord', (msg) => {
-  $('.lobbyContainer').append($('<a class="word">').text(msg));
+  $('.word').text(msg);
 })
+
+$('.sendWordForm').submit((e) => {
+  e.preventDefault(); // prevents page reloading  
+  socket.emit('emitClue', {"user": userName, "msg": $('.wordInput').val()});
+  $('.wordInput').val('');
+  return false;
+});
+
+socket.on("getClue", (data) => {
+  $(`.player`)[data.index].append(` ${data.msg} `);
+});

@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../styles/style.css">
   </head>
   <body>
+
     <div class="lobbyContainer">
       <h1 class="gameTitle">L'imposteur</h1>
       <div id="usernameList"></div>
@@ -13,6 +14,16 @@
         <button class="addUsernameButton">Send</button>
       </form>
     </div>
+
+    <div class="gameContainer hide">
+      <div class="word"></div>
+      <div class="playerList"></div>
+      <form class="sendWordForm" action="">
+        <input class="wordInput" type="text" autocomplete="off"><br />
+        <button class="sendWordButton">Send</button>
+      </form>
+    </div>
+
     <script src="/js/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="../js/main.js"></script>

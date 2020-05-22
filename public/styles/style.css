@@ -11,12 +11,12 @@ h1 {
   margin: 25px 0;
 }
 
-.lobbyContainer {
+.lobbyContainer, .gameContainer {
   text-align: center;
   margin-top: 300px;
 }
 
-.addUsernameButton, .startGameButton {
+.addUsernameButton, .startGameButton, .sendWordButton {
   cursor: pointer;
   background-color: #393839;
   border: 1px solid black;
@@ -47,5 +47,9 @@ h1 {
 }
 
 .removed {
+  display: none;
+}
+
+.hide {
   display: none;
 }
