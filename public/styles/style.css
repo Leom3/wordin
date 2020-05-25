@@ -11,12 +11,12 @@ h1 {
   margin: 25px 0;
 }
 
-.lobbyContainer, .gameContainer {
+.lobbyContainer, .gameContainer, .voteContainer {
   text-align: center;
   margin-top: 300px;
 }
 
-.addUsernameButton, .startGameButton, .sendWordButton {
+.addUsernameButton, .startGameButton, .sendWordButton, .goToVotesButton, .validateVotesButton, .resetButton {
   cursor: pointer;
   background-color: #393839;
   border: 1px solid black;
@@ -27,7 +27,7 @@ h1 {
   margin-top: 7px;
 }
 
-.addUsernameButton:hover, .startGameButton:hover {
+.addUsernameButton:hover, .startGameButton:hover, .sendWordButton:hover, .goToVotesButton:hover, .validateVotesButton:hover, .resetButton:hover {
   background-color: #222222;
   transition: 0.1s;
 }
@@ -52,4 +52,22 @@ h1 {
 
 .hide {
   display: none;
+}
+
+.word {
+  position: relative;
+  bottom: 100px;
+  font-size: 24px;
+}
+
+.sendWordForm, .goToVotesButton, .validateVotesButton {
+  position: relative;
+  top: 400px;
+}
+
+.resetButton {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  width: 100px;
 }

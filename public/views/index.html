@@ -16,13 +16,21 @@
     </div>
 
     <div class="gameContainer hide">
-      <div class="word"></div>
+      <div class="word">cc</div>
       <div class="playerList"></div>
       <form class="sendWordForm" action="">
         <input class="wordInput" type="text" autocomplete="off"><br />
         <button class="sendWordButton">Send</button>
       </form>
+      <button class="goToVotesButton hide">Go to votes</button>
     </div>
+
+    <div class="voteContainer hide">
+      <form class="votePlayerList"></form>
+      <button class="validateVotesButton hide">Validate votes</button>
+    </div>
+
+    <button class="resetButton">Reset</button>
 
     <script src="/js/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
