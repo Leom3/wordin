@@ -203,6 +203,7 @@ io.sockets.on('connection', function (socket) {
 			else
 				console.log(deleted);
 		})
+		io.emit("onReset", "");
 	});
 });
 
