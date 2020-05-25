@@ -103,7 +103,12 @@ io.sockets.on('connection', function (socket) {
 			}
 			nbPlayer = items[0].players.length;
 			var randPlayer = (Math.floor(Math.random() * nbPlayer));
-			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer}}, function(err, updated) {
+			var voteTab = [];
+			console.log(nbPlayer);
+			items[0].players.forEach(function() {
+				voteTab.push(0);
+			});
+			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "voteTab" : voteTab}}, function(err, updated) {
 				if (err)
 					io.sockets.sockets[socket.id].emit('error', err);
 				else if (updated.modifiedCount != 1) {
@@ -151,19 +156,54 @@ io.sockets.on('connection', function (socket) {
 		io.emit("switchToVote", "");
 	});
 
-	// socket.on('submitVote', function(data) {
-	// 	var votes = data.votes;
-	// 	var nbPlayers = votes.length;
-	// 	database.findInCollection("game", {}, function(err, items) {
-	// 		if (err)
-	// 			io.sockets.sockets[socket.id].emit('error', err);
-	// 		else {
-	// 			var players = items[0].players;
-	// 			var indexPlayer = players.indexOf(user);
-	// 			io.emit("getClue", {index : indexPlayer, msg : msg});
-	// 		}
-	// 	});
-	// });
+	socket.on('addVote', function(data) {
+		var playerId = data.id;
+		database.findInCollection("game", {}, function(err, items) {
+			if (err)
+				io.sockets.sockets[socket.id].emit('error', err);
+			else {
+				var voteTab = items[0].voteTab;
+				voteTab[playerId] = voteTab[playerId] + 1;
+				database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"voteTab": voteTab}}, function(err, updated) {
+					if (err)
+						io.sockets.sockets[socket.id].emit('error', err);
+					else if (updated.modifiedCount != 1) {
+						io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
+					}
+				});
+				io.emit("voteCount", {"id" : playerId, "nbVotes" : voteTab[playerId]});
+			}
+		});
+	})
+
+	socket.on('submitVote', function(data) {
+		var votes = data.votes.sort((a, b) => b.nbVotes - a.nbVotes);
+		var mostVoted = votes[0];
+		database.findInCollection("game", {}, function(err, items) {
+			if (err)
+				io.sockets.sockets[socket.id].emit('error', err);
+			else {
+				var players = items[0].players;
+				var intruder = items[0].intruder;
+			}
+		});
+	});
+
+	socket.on('reset', function(data) {
+		database.removeInCollection("game", {}, function(err, deleted) {
+			if (err)
+				io.sockets.sockets[socket.id].emit('error', err);
+			else
+				console.log(deleted);
+		})
+
+		database.removeInCollection("users", {}, function(err, deleted) {
+			if (err)
+				io.sockets.sockets[socket.id].emit('error', err);
+			else
+				console.log(deleted);
+		})
+	});
 });
 
 app.use(sessionMiddleware);
