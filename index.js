@@ -76,7 +76,7 @@ io.sockets.on('connection', function (socket) {
 							database.updateInCollection("game", {"type" : "gameRoom"}, {"$push": {"players": username}}, function(err, updated) {
 								if (err)
 									io.sockets.sockets[socket.id].emit('error', err);
-								if (updated.modifiedCount != 1) {
+								else if (updated.modifiedCount != 1) {
 									io.sockets.sockets[socket.id].emit('error', "cannot add player");
 								}
 								else {
@@ -84,7 +84,8 @@ io.sockets.on('connection', function (socket) {
 										if (err) {
 											io.sockets.sockets[socket.id].emit('error', err);
 										}
-										io.emit('players', items[0].players);
+										else
+											io.emit('players', items[0].players);
 									})
 								}
 							});
@@ -96,45 +97,39 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('startGame', function(nbTurn) {
-		io.emit('startGame', "test");
 		database.findInCollection("game", {}, function(err, items) {
 			if (err) {
 				io.sockets.sockets[socket.id].emit('error', err);
 			}
 			nbPlayer = items[0].players.length;
-			if (!nbTurn || nbTurn == "") {
-				nbTurn = 20;
-			}
-			console.log("NBTURN : " + nbTurn);
-			console.log("NBPLLAYER : " + nbPlayer);
-			var randTab = [];
-			for (var i = 0; i != nbTurn; i++) {
-				randTab.push(Math.floor(Math.random() * nbPlayer));
-				console.log(randTab);
-			}
-			console.log(randTab);
-			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"randTab": randTab}}, function(err, updated) {
+			var randPlayer = (Math.floor(Math.random() * nbPlayer));
+			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer}}, function(err, updated) {
 				if (err)
 					io.sockets.sockets[socket.id].emit('error', err);
-				if (updated.modifiedCount != 1) {
-					io.sockets.sockets[socket.id].emit('error', "cannot add randtab");
+				else if (updated.modifiedCount != 1) {
+					io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
 				}
 			});
 		});
+		io.emit('startGame', "");
 	});
 
 	socket.on('getWord', function(data) {
 		var user = data.user;
 		var turn = data.turn;
 		database.findInCollection("game", {}, function(err, items) {
-			var wordComb = words.gameList[turn];
-			var rand = items[0].randTab[turn];
-			var players = items[0].players;
-			var indexPlayer = players.indexOf(user);
-			if (indexPlayer == rand)
-				io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
-			else
-				io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
+			if (err)
+				io.sockets.sockets[socket.id].emit('error', err);
+			else {
+				var wordComb = words.gameList[turn];
+				var indexIntruder = items[0].intruder;
+				var players = items[0].players;
+				var indexPlayer = players.indexOf(user);
+				if (indexPlayer == indexIntruder)
+					io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
+				else
+					io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
+			}
 		});
 	});
 
@@ -142,11 +137,33 @@ io.sockets.on('connection', function (socket) {
 		var user = data.user;
 		var msg = data.msg;
 		database.findInCollection("game", {}, function(err, items) {
-			var players = items[0].players;
-			var indexPlayer = players.indexOf(user);
-			io.emit("getClue", {index : indexPlayer, msg : msg});
+			if (err)
+				io.sockets.sockets[socket.id].emit('error', err);
+			else {
+				var players = items[0].players;
+				var indexPlayer = players.indexOf(user);
+				io.emit("getClue", {index : indexPlayer, msg : msg});
+			}
 		});
 	});
+
+	socket.on('switchToVote', function(data) {
+		io.emit("switchToVote", "");
+	});
+
+	// socket.on('submitVote', function(data) {
+	// 	var votes = data.votes;
+	// 	var nbPlayers = votes.length;
+	// 	database.findInCollection("game", {}, function(err, items) {
+	// 		if (err)
+	// 			io.sockets.sockets[socket.id].emit('error', err);
+	// 		else {
+	// 			var players = items[0].players;
+	// 			var indexPlayer = players.indexOf(user);
+	// 			io.emit("getClue", {index : indexPlayer, msg : msg});
+	// 		}
+	// 	});
+	// });
 });
 
 app.use(sessionMiddleware);
