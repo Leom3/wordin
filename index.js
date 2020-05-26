@@ -178,7 +178,17 @@ io.sockets.on('connection', function (socket) {
 			else {
 				var players = items[0].players;
 				var intruder = items[0].intruder;
+				var winner = players[mostVoted.id];
+				var winnerName = players[winner];
+				var intruderName = players[intruder];
+				var msg = "";
+				if (intruder == winner) {
+					msg = "Imposter won. It was " + intruderName;
+				}
+				else
+					msg = "Imposter lost. It was " + intruderName;
 			}
+			io.emit("voteResults", {"winner" : winnerName, "msg" : msg});
 		});
 	});
 
