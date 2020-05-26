@@ -86,8 +86,6 @@ function newVote(element) {
 }
 
 socket.on("addVote", (data) => {
-  console.log('I RECEIVED', data.nbVotes);
-
   $(`#${data.id}playerVotes`).text(` ${data.nbVotes} `);
 });
 
@@ -111,6 +109,22 @@ socket.on("onReset", () => {
   $(".lobbyContainer").removeClass("hide");
   $('.addUsernameButton').removeClass("removed");
   $(".startGameButton").addClass("hide");
+  $(".resultContainer").addClass("hide");
   $('#usernameInput').attr("readonly", false);
   currentVote = -1;
+});
+
+$('.validateVotesButton').click(() => {
+  const data = [];
+  for (let i = 0; i < $(".votePlayer").length; i++) {
+    data.push({id: i, nbVotes: parseInt($(`#${i}playerVotes`).text())});
+  }
+  socket.emit("submitVote", data);  
+});
+
+socket.on("voteResults", (data) => {
+  console.log("BON");
+  $(".resultContainer").removeClass("hide");
+  $(".winnerName").text(data.winner);
+  $(".winMessage").text(data.msg);
 });
