@@ -20,27 +20,5 @@
         {"real" : "Mario", "intruder" : "Luigi"},
         {"real" : "Zelda", "intruder" : "Link"},
         {"real" : "Macdo", "intruder" : "Burger King"}
-    ],
-    "list" : [
-        {"real" : "patate", "intruder" : "patate douce"},
-        {"real" : "LoL", "intruder" : "dota"},
-        {"real" : "couteau", "intruder" : "fourchette"},
-        {"real" : "macbook", "intruder" : "notebook"},
-        {"real" : "coca", "intruder" : "pepsi"},
-        {"real" : "epitech", "intruder" : "epita"},
-        {"real" : "Chez Tonton", "intruder" : "Le saint des seins"},
-        {"real" : "Vodka", "intruder" : "Jaggermeister"},
-        {"real" : "Corée", "intruder" : "Japon"},
-        {"real" : "Messi", "intruder" : "Ronaldo"},
-        {"real" : "Lion", "intruder" : "Tigre"},
-        {"real" : "Naruto", "intruder" : "Sasuke"},
-        {"real" : "Biceps", "intruder" : "Triceps"},
-        {"real" : "Nike", "intruder" : "Adidas"},
-        {"real" : "Toulouse", "intruder" : "Bordeaux"},
-        {"real" : "Manuel Ferrara", "intruder" : "Rocco Siffredi"},
-        {"real" : "Le seigneur des anneaux", "intruder" : "Le hobbit"},
-        {"real" : "Mario", "intruder" : "Luigi"},
-        {"real" : "Zelda", "intruder" : "Link"},
-        {"real" : "Macdo", "intruder" : "Burger King"}
     ]
 }

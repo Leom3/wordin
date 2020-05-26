@@ -38,7 +38,7 @@ socket.on('loggedHost', (msg) => {
   $(".validateVotesButton").removeClass("hide");
   $('.lobbyContainer').append($('<button class="startGameButton">').text("Start game"));
   $(".startGameButton").on("click", function() {
-    socket.emit('startGame', "");
+    socket.emit('startGame', turn);
   });
 });
 
@@ -112,6 +112,8 @@ socket.on("onReset", () => {
   $(".resultContainer").addClass("hide");
   $('#usernameInput').attr("readonly", false);
   currentVote = -1;
+  turn = 0;
+  userName = "";
 });
 
 $('.validateVotesButton').click(() => {

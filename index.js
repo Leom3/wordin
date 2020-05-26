@@ -50,9 +50,8 @@ io.sockets.on('connection', function (socket) {
 						if (err) {
 							io.sockets.sockets[socket.id].emit('error', err);
 						}
-						console.log(items);
 						if (items.length <= 0) {
-							database.insertInCollection("game", {"host" : username, "socketId" : socketId, "type" : "gameRoom", players : [username]}, function(err, game) {
+							database.insertInCollection("game", {"host" : username, "socketId" : socketId, "type" : "gameRoom", players : [username], "words" : words.gameList}, function(err, game) {
 								if (err)
 									io.sockets.sockets[socket.id].emit('error', err);
 								else {
@@ -103,12 +102,14 @@ io.sockets.on('connection', function (socket) {
 			}
 			nbPlayer = items[0].players.length;
 			var randPlayer = (Math.floor(Math.random() * nbPlayer));
-			var voteTab = [];
-			console.log(nbPlayer);
-			items[0].players.forEach(function() {
-				voteTab.push(0);
-			});
-			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "voteTab" : voteTab}}, function(err, updated) {
+			var words = items[0].words;
+			var randIndex = (Math.floor(Math.random() * (words.length)));
+			if (nbTurn != 0) {
+				console.log("splicing words tab");
+				words.splice(items[0].randIndex);
+			}
+			console.log("inserting : " + randIndex);
+			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "words" : words, "randIndex" : randIndex}}, function(err, updated) {
 				if (err)
 					io.sockets.sockets[socket.id].emit('error', err);
 				else if (updated.modifiedCount != 1) {
@@ -121,12 +122,15 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('getWord', function(data) {
 		var user = data.user;
-		var turn = data.turn;
 		database.findInCollection("game", {}, function(err, items) {
 			if (err)
 				io.sockets.sockets[socket.id].emit('error', err);
 			else {
-				var wordComb = words.gameList[turn];
+				var words = items[0].words;
+				var randIndex = items[0].randIndex;
+				console.log(randIndex);
+				var wordComb = words[randIndex];
+				console.log(wordComb);
 				var indexIntruder = items[0].intruder;
 				var players = items[0].players;
 				var indexPlayer = players.indexOf(user);
@@ -170,7 +174,7 @@ io.sockets.on('connection', function (socket) {
 
 
 	socket.on('submitVote', function(data) {
-		var votes = data.votes.sort((a, b) => b.nbVotes - a.nbVotes);
+		var votes = data.sort((a, b) => b.nbVotes - a.nbVotes);
 		var mostVoted = votes[0];
 		database.findInCollection("game", {}, function(err, items) {
 			if (err)
@@ -178,15 +182,13 @@ io.sockets.on('connection', function (socket) {
 			else {
 				var players = items[0].players;
 				var intruder = items[0].intruder;
-				var winner = players[mostVoted.id];
-				var winnerName = players[winner];
+				var winnerName = players[mostVoted.id];
 				var intruderName = players[intruder];
 				var msg = "";
-				if (intruder == winner) {
-					msg = "Imposter won. It was " + intruderName;
-				}
+				if (intruder == mostVoted.id)
+					msg = "Imposter lost. It was " + intruderName + ".";
 				else
-					msg = "Imposter lost. It was " + intruderName;
+					msg = "Imposter won. It was " + intruderName + ".";
 			}
 			io.emit("voteResults", {"winner" : winnerName, "msg" : msg});
 		});
@@ -196,15 +198,11 @@ io.sockets.on('connection', function (socket) {
 		database.removeInCollection("game", {}, function(err, deleted) {
 			if (err)
 				io.sockets.sockets[socket.id].emit('error', err);
-			else
-				console.log(deleted);
 		})
 
 		database.removeInCollection("users", {}, function(err, deleted) {
 			if (err)
 				io.sockets.sockets[socket.id].emit('error', err);
-			else
-				console.log(deleted);
 		})
 		io.emit("onReset", "");
 	});
