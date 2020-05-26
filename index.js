@@ -171,7 +171,7 @@ io.sockets.on('connection', function (socket) {
 						io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
 					}
 				});
-				io.emit("voteCount", {"id" : playerId, "nbVotes" : voteTab[playerId]});
+				io.emit("addVote", {"id" : playerId, "nbVotes" : voteTab[playerId]});
 			}
 		});
 	})
@@ -191,7 +191,7 @@ io.sockets.on('connection', function (socket) {
 						io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
 					}
 				});
-				io.emit("voteCount", {"id" : playerId, "nbVotes" : voteTab[playerId]});
+				io.emit("removeVote", {"id" : playerId, "nbVotes" : voteTab[playerId]});
 			}
 		});
 	})
