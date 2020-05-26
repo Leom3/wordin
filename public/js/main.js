@@ -2,6 +2,7 @@ const socket = io();
 var userName = "";
 var turn = 0;
 let isHost = false;
+let currentVote = -1;
 
 $('.usernameForm').submit((e) => {
   e.preventDefault(); // prevents page reloading
@@ -25,7 +26,7 @@ socket.on('players', (players) => {
       <div class="votePlayer">
         <input id="${i}player" type="radio" name="player" onchange="newVote(this)" />
          ${player}
-        <span id="${i}playerVotes"></span>
+        <span id="${i}playerVotes">0</span>
       </div>`);
     i++;
   }
@@ -77,10 +78,20 @@ socket.on("switchToVote", () => {
 });
 
 function newVote(element) {
-  socket.emit("addVote", {"id": parseInt($(element).attr("id"))});
+  if (currentVote !== -1) {
+    socket.emit("removeVote", {"id": currentVote, "nbVotes": parseInt($(`#${currentVote}playerVotes`).text())});
+  }
+  currentVote = parseInt($(element).attr("id"));
+  socket.emit("addVote", {"id": parseInt($(element).attr("id")), "nbVotes": parseInt($(`#${parseInt($(element).attr("id"))}playerVotes`).text())});
 }
 
-socket.on("voteCount", (data) => {
+socket.on("addVote", (data) => {
+  console.log('I RECEIVED', data.nbVotes);
+
+  $(`#${data.id}playerVotes`).text(` ${data.nbVotes} `);
+});
+
+socket.on("removeVote", (data) => {
   $(`#${data.id}playerVotes`).text(` ${data.nbVotes} `);
 });
 
@@ -101,4 +112,5 @@ socket.on("onReset", () => {
   $('.addUsernameButton').removeClass("removed");
   $(".startGameButton").addClass("hide");
   $('#usernameInput').attr("readonly", false);
+  currentVote = -1;
 });
