@@ -176,6 +176,26 @@ io.sockets.on('connection', function (socket) {
 		});
 	})
 
+	socket.on('removeVote', function(data) {
+		var playerId = data.id;
+		database.findInCollection("game", {}, function(err, items) {
+			if (err)
+				io.sockets.sockets[socket.id].emit('error', err);
+			else {
+				var voteTab = items[0].voteTab;
+				voteTab[playerId] = voteTab[playerId] - 1;
+				database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"voteTab": voteTab}}, function(err, updated) {
+					if (err)
+						io.sockets.sockets[socket.id].emit('error', err);
+					else if (updated.modifiedCount != 1) {
+						io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
+					}
+				});
+				io.emit("voteCount", {"id" : playerId, "nbVotes" : voteTab[playerId]});
+			}
+		});
+	})
+
 	socket.on('submitVote', function(data) {
 		var votes = data.votes.sort((a, b) => b.nbVotes - a.nbVotes);
 		var mostVoted = votes[0];
