@@ -170,8 +170,9 @@ io.sockets.on('connection', function (socket) {
 					else if (updated.modifiedCount != 1) {
 						io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
 					}
+					else
+						io.emit("addVote", {"id" : playerId, "nbVotes" : voteTab[playerId]});
 				});
-				io.emit("addVote", {"id" : playerId, "nbVotes" : voteTab[playerId]});
 			}
 		});
 	})
@@ -190,8 +191,9 @@ io.sockets.on('connection', function (socket) {
 					else if (updated.modifiedCount != 1) {
 						io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
 					}
+					else
+						io.emit("removeVote", {"id" : playerId, "nbVotes" : voteTab[playerId]});
 				});
-				io.emit("removeVote", {"id" : playerId, "nbVotes" : voteTab[playerId]});
 			}
 		});
 	})
