@@ -1,4 +1,3 @@
-require('dotenv').config();
 const mongo = require('mongodb');
 const mongoClient = mongo.MongoClient;
 const environment = process.env.PRODUCTION == "FALSE" ? require('../../environments/development.json') : require('../../environments/production.json');
@@ -261,8 +260,10 @@ class Database {
 		collection.updateOne(query, data, callback);
 	}
 }
-
-let database = new Database(environment.database.name, environment.database.link);
+if (process.env.MONGODB_NAME)
+	let database = new Database(process.env.MONGODB_NAME, process.env.MONGODB_URI);
+else
+	let database = new Database(environment.database.name, environment.database.link);
 
 function createCollections() {
 }

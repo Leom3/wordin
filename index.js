@@ -1,12 +1,8 @@
-require('dotenv').config();
 console.log(process.env.PRODUCTION);
-const config = process.env.PRODUCTION == "FALSE" ? require('./environments/development.json') : require('./environments/production.json');
-const port = config.port;
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bearerToken = require('express-bearer-token');
-const socket = require('socket.io');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const database = require('./src/database');
