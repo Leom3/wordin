@@ -260,10 +260,14 @@ class Database {
 		collection.updateOne(query, data, callback);
 	}
 }
+
+let database = null;
 if (process.env.MONGODB_NAME)
-	let database = new Database(process.env.MONGODB_NAME, process.env.MONGODB_URI);
-else
-	let database = new Database(environment.database.name, environment.database.link);
+	database = new Database(process.env.MONGODB_NAME, process.env.MONGODB_URI);
+else {
+	console.log("ONLINE ! ");
+	database = new Database(environment.database.name, environment.database.link);
+}
 
 function createCollections() {
 }
