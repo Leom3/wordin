@@ -8,7 +8,7 @@ const session = require('express-session');
 const database = require('./src/database');
 const words = require('./src/words.json');
 
-var server = app.listen(8000);
+var server = app.listen(process.env.PORT || 8000)
 var io = require('socket.io').listen(server);
 
 var sessionMiddleware = session({
