@@ -36,6 +36,7 @@ socket.on('loggedHost', (msg) => {
   isHost = true;
   $(".goToVotesButton").removeClass("hide");
   $(".validateVotesButton").removeClass("hide");
+  $(".newGameButton").removeClass("hide");
   $('.lobbyContainer').append($('<button class="startGameButton">').text("Start game"));
   $(".startGameButton").on("click", function() {
     socket.emit('startGame', turn);
@@ -47,9 +48,24 @@ socket.on('error', (msg) => {
 });
 
 socket.on('startGame', (msg) => {
+  let data = [];
+  for (let i = 0; i < $('.player').length; i++) {
+    data.push($('.player')[i].innerText);
+  }
+  if (!localStorage.getItem("players")) {
+    localStorage.setItem("players", JSON.stringify(data));
+  }
+  data = JSON.parse(localStorage.getItem("players"));
+  for (let i = 0; i < $('.player').length; i++) {
+    $('.player')[i].innerText = data[i];
+  }
   $('.lobbyContainer').addClass("hide");
+  $('.resultContainer').addClass("hide");
   $(".gameContainer").removeClass("hide");
-  socket.emit('getWord', {"user" : userName, "turn" : 0});
+  $(".votePlayer input").prop("checked", false);
+  $(".votePlayer span").text("0");
+  currentVote = -1;
+  socket.emit('getWord', {"user" : userName, "turn" : turn});
   turn = turn + 1;
 });
 
@@ -111,6 +127,7 @@ socket.on("onReset", () => {
   $(".startGameButton").addClass("hide");
   $(".resultContainer").addClass("hide");
   $('#usernameInput').attr("readonly", false);
+  localStorage.removeItem("players");
   currentVote = -1;
   turn = 0;
   userName = "";
@@ -125,8 +142,12 @@ $('.validateVotesButton').click(() => {
 });
 
 socket.on("voteResults", (data) => {
-  console.log("BON");
+  $(".voteContainer").addClass("hide");
   $(".resultContainer").removeClass("hide");
-  $(".winnerName").text(data.winner);
+  $(".winnerName").text("Players voted for " + data.winner);
   $(".winMessage").text(data.msg);
+});
+
+$('.newGameButton').click(() => {
+  socket.emit('startGame', turn);
 });

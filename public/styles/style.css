@@ -11,7 +11,7 @@ h1 {
   margin: 25px 0;
 }
 
-.lobbyContainer, .gameContainer, .voteContainer {
+.lobbyContainer, .gameContainer, .voteContainer, .resultContainer {
   text-align: center;
   margin-top: 300px;
 }
@@ -60,7 +60,7 @@ h1 {
   font-size: 24px;
 }
 
-.sendWordForm, .goToVotesButton, .validateVotesButton {
+.sendWordForm, .goToVotesButton, .validateVotesButton, .newGameButton {
   position: relative;
   top: 400px;
 }
@@ -70,4 +70,8 @@ h1 {
   top: 0;
   right: 8px;
   width: 100px;
+}
+
+.winnerName, .winMessage {
+  font-size: 24px;
 }
