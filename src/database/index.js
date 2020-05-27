@@ -13,7 +13,7 @@ class Database {
 		const self = this;
 
 		console.error("Trying to connect to server: " + this.url);
-		mongoClient.connect(this.url + this.name, {useNewUrlParser: true, useUnifiedTopology: true},
+		mongoClient.connect(this.url, {useNewUrlParser: true, useUnifiedTopology: true},
 			function(err, connection) {
 				if (err) {
 					console.error(err);
