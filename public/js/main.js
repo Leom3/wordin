@@ -127,6 +127,7 @@ socket.on("onReset", () => {
   $(".startGameButton").addClass("hide");
   $(".resultContainer").addClass("hide");
   $('#usernameInput').attr("readonly", false);
+  $(".newGameButton").addClass("hide");
   localStorage.removeItem("players");
   currentVote = -1;
   turn = 0;
