@@ -99,17 +99,15 @@ io.sockets.on('connection', function (socket) {
 			nbPlayer = items[0].players.length;
 			var randPlayer = (Math.floor(Math.random() * nbPlayer));
 			var words = items[0].words;
-			var randIndex = (Math.floor(Math.random() * (words.length)));
 			if (nbTurn != 0) {
-				console.log("splicing words tab");
-				words.splice(items[0].randIndex);
+				words.splice(0);
+				words.sort(() => Math.random() - 0.5);
 			}
-			console.log("inserting : " + randIndex);
-			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "words" : words, "randIndex" : randIndex}}, function(err, updated) {
+			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "words" : words}}, function(err, updated) {
 				if (err)
 					io.sockets.sockets[socket.id].emit('error', err);
 				else if (updated.modifiedCount != 1) {
-					io.sockets.sockets[socket.id].emit('error', "cannot set random intruder");
+					io.sockets.sockets[socket.id].emit('error', "cannot set random intruder and/or words tab");
 				}
 			});
 		});
@@ -122,15 +120,10 @@ io.sockets.on('connection', function (socket) {
 			if (err)
 				io.sockets.sockets[socket.id].emit('error', err);
 			else {
-				var words = items[0].words;
-				var randIndex = items[0].randIndex;
-				console.log(randIndex);
-				var wordComb = words[randIndex];
+				var wordComb = items[0].words[0];
+				var indexPlayer = items[0].players.indexOf(user);
 				console.log(wordComb);
-				var indexIntruder = items[0].intruder;
-				var players = items[0].players;
-				var indexPlayer = players.indexOf(user);
-				if (indexPlayer == indexIntruder)
+				if (indexPlayer == items[0].intruder)
 					io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
 				else
 					io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
