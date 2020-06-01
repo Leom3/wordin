@@ -25,6 +25,7 @@ h1 {
   padding: 5px 0;
   font-size: 0.875rem;
   margin-top: 7px;
+  font-size: 18px;
 }
 
 .addUsernameButton:hover, .startGameButton:hover, .sendWordButton:hover, .goToVotesButton:hover, .validateVotesButton:hover, .resetButton:hover, .newGameButton:hover {
@@ -34,16 +35,30 @@ h1 {
 
 #usernameList {
   margin-bottom: 25px;
+  font-size: 23px;
+}
+
+.playerList, .votePlayerList {
+  font-size: 23px;
+}
+
+.playerList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  position: relative;
+  bottom: 125px;
 }
 
 .username {
   margin: 0 10px;
 }
 
-#usernameInput {
+#usernameInput, .wordInput {
   padding: 5px 2px;
   border: none;
   width: 169px;
+  font-size: 18px;
 }
 
 .removed {
@@ -56,8 +71,8 @@ h1 {
 
 .word {
   position: relative;
-  bottom: 100px;
-  font-size: 24px;
+  bottom: 180px;
+  font-size: 2em;
 }
 
 .sendWordForm, .goToVotesButton, .validateVotesButton, .newGameButton {
@@ -69,9 +84,14 @@ h1 {
   position: absolute;
   top: 0;
   right: 8px;
-  width: 100px;
+  width: 150px;
 }
 
 .winnerName, .winMessage {
   font-size: 24px;
+}
+
+.gameTitle {
+  position: relative;
+  bottom: 180px;
 }

@@ -6,6 +6,7 @@ let currentVote = -1;
 
 $('.usernameForm').submit((e) => {
   e.preventDefault(); // prevents page reloading
+  $("#usernameInput").attr("placeholder", "");
   socket.emit('login', $('#usernameInput').val());
   userName = $('#usernameInput').val();
   $('#usernameInput').val('');
@@ -83,7 +84,11 @@ $('.sendWordForm').submit((e) => {
 });
 
 socket.on("getClue", (data) => {
-  $(`.player`)[data.index].append(` ${data.msg} `);
+  let players = document.querySelectorAll(".player");
+  let message = document.createElement("div");
+  message.innerHTML = data.msg;
+  players[data.index].appendChild(message);
+  // $(`.player`)[data.index].append(` ${data.msg} `);
 });
 
 $(".goToVotesButton").click(() => {
@@ -131,6 +136,7 @@ socket.on("onReset", () => {
   $(".resultContainer").addClass("hide");
   $('#usernameInput').attr("readonly", false);
   $(".newGameButton").addClass("hide");
+  $("#usernameInput").attr("placeholder", "Username");
   localStorage.removeItem("players");
   currentVote = -1;
   turn = 0;
