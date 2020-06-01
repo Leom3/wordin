@@ -1,6 +1,6 @@
 const mongo = require('mongodb');
 const mongoClient = mongo.MongoClient;
-const environment = process.env.PRODUCTION == "FALSE" ? require('../../environments/development.json') : require('../../environments/production.json');
+const environment = require('../../environments/development.json');
 
 class Database {
 	constructor(name, url) {
@@ -265,8 +265,8 @@ let database = null;
 if (process.env.MONGODB_NAME)
 	database = new Database(process.env.MONGODB_NAME, process.env.MONGODB_URI);
 else {
-	console.log("ONLINE ! ");
-	database = new Database(environment.database.name, environment.database.link);
+	console.log("OFFLINE ! ");
+	database = new Database(environment.database.name, environment.database.link + environment.database.name);
 }
 
 function createCollections() {

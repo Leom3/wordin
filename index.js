@@ -1,4 +1,3 @@
-console.log(process.env.PRODUCTION);
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -7,16 +6,18 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const database = require('./src/database');
 const words = require('./src/words.json');
+const server = app.listen(process.env.PORT || 8000)
+const io = require('socket.io').listen(server);
 
-var server = app.listen(process.env.PORT || 8000)
-var io = require('socket.io').listen(server);
-
-var sessionMiddleware = session({
-	secret: "keyboard cat"
+io.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
 });
 
-io.use(function (socket, next) {
-	sessionMiddleware(socket.request, socket.request.res, next);
+var sessionMiddleware = session({
+	secret: "keyboard cat",
+	cookie: {
+        expires: 600000
+    }
 });
 
 io.sockets.on('connection', function (socket) {
@@ -47,7 +48,7 @@ io.sockets.on('connection', function (socket) {
 							io.sockets.sockets[socket.id].emit('error', err);
 						}
 						if (items.length <= 0) {
-							database.insertInCollection("game", {"host" : username, "socketId" : socketId, "type" : "gameRoom", players : [username], "words" : words.gameList}, function(err, game) {
+							database.insertInCollection("game", {"host" : username, "socketId" : socketId, "type" : "gameRoom", players : [username], "words" : words.gameList.sort(() => Math.random() - 0.5)}, function(err, game) {
 								if (err)
 									io.sockets.sockets[socket.id].emit('error', err);
 								else {
@@ -99,8 +100,9 @@ io.sockets.on('connection', function (socket) {
 			nbPlayer = items[0].players.length;
 			var randPlayer = (Math.floor(Math.random() * nbPlayer));
 			var words = items[0].words;
+			console.log("NBTURN : " + nbTurn);
 			if (nbTurn != 0) {
-				words.splice(0);
+				words.shift();
 				words.sort(() => Math.random() - 0.5);
 			}
 			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "words" : words}}, function(err, updated) {
@@ -187,12 +189,12 @@ io.sockets.on('connection', function (socket) {
 		database.removeInCollection("game", {}, function(err, deleted) {
 			if (err)
 				io.sockets.sockets[socket.id].emit('error', err);
-		})
+		});
 
 		database.removeInCollection("users", {}, function(err, deleted) {
 			if (err)
 				io.sockets.sockets[socket.id].emit('error', err);
-		})
+		});
 		io.emit("onReset", "");
 	});
 });

@@ -15,6 +15,7 @@ $('.usernameForm').submit((e) => {
 });
 
 socket.on('players', (players) => {
+  console.log("TOKEN :" + sessionStorage.token);
   $('#usernameList').html("");
   $(".playerList").html("");
   $(".votePlayerList").html("");
@@ -70,6 +71,7 @@ socket.on('startGame', (msg) => {
 });
 
 socket.on('getWord', (msg) => {
+  console.log(msg);
   $('.word').text(msg);
 })
 
@@ -89,6 +91,7 @@ $(".goToVotesButton").click(() => {
 });
 
 socket.on("switchToVote", () => {
+  $(".appendClass").removeClass("gameName");
   $(".gameContainer").addClass("hide");
   $(".voteContainer").removeClass("hide");
 });
