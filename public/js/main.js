@@ -27,8 +27,8 @@ socket.on('players', (players) => {
     $(".votePlayerList").append(`
       <div class="votePlayer">
         <input id="${i}player" type="radio" name="player" onchange="newVote(this)" />
-         ${player}
-        <span id="${i}playerVotes">0</span>
+          ${player}
+        <span id="${i}playerVotes" class="voteCount">0</span>
       </div>`);
     i++;
   }
@@ -88,7 +88,6 @@ socket.on("getClue", (data) => {
   let message = document.createElement("div");
   message.innerHTML = data.msg;
   players[data.index].appendChild(message);
-  // $(`.player`)[data.index].append(` ${data.msg} `);
 });
 
 $(".goToVotesButton").click(() => {

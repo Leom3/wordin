@@ -18,14 +18,17 @@
     <div class="gameContainer hide">
       <div class="word">cc</div>
       <div class="playerList"></div>
-      <form class="sendWordForm" action="">
-        <input class="wordInput" type="text" placeholder="Message" autocomplete="off"><br />
-        <button class="sendWordButton">Send</button>
-      </form>
-      <button class="goToVotesButton hide">Go to votes</button>
+      <div class="sendWordContainer">
+        <form class="sendWordForm" action="">
+          <input class="wordInput" type="text" placeholder="Message" autocomplete="off"><br />
+          <button class="sendWordButton">Send</button>
+        </form>
+        <button class="goToVotesButton hide">Go to votes</button>
+      </div>
     </div>
 
     <div class="voteContainer hide">
+      <h1 class="voteTitle">Votes</h1>
       <form class="votePlayerList"></form>
       <button class="validateVotesButton hide">Validate votes</button>
     </div>
