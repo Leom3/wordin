@@ -4,14 +4,41 @@ var turn = 0;
 let isHost = false;
 let currentVote = -1;
 
+window.onbeforeunload = function() {
+  return "If you leave this page, you won'll have to wait for the next!";
+}
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 $('.usernameForm').submit((e) => {
   e.preventDefault(); // prevents page reloading
+  var checkUser = getCookie("username");
   $("#usernameInput").attr("placeholder", "");
-  socket.emit('login', $('#usernameInput').val());
-  userName = $('#usernameInput').val();
-  $('#usernameInput').val('');
-  $('#usernameInput').attr("readonly", true);
-  $('.addUsernameButton').addClass("removed");
+  if (checkUser) {
+    alert("seems like you are already logged with " + checkUser);
+  }
+  else {
+    socket.emit('login', $('#usernameInput').val());
+    userName = $('#usernameInput').val();
+    document.cookie= "username=" + userName;
+    $('#usernameInput').val('');
+    $('#usernameInput').attr("readonly", true);
+    $('.addUsernameButton').addClass("removed");
+  }
   return false;
 });
 
@@ -50,6 +77,9 @@ socket.on('error', (msg) => {
 });
 
 socket.on('startGame', (msg) => {
+  if (isHost == false) {
+    $(".resetButton").addClass("hide");
+  }
   let data = [];
   for (let i = 0; i < $('.player').length; i++) {
     data.push($('.player')[i].innerText);

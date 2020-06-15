@@ -21,6 +21,7 @@ var sessionMiddleware = session({
 });
 
 io.sockets.on('connection', function (socket) {
+	var req = socket.request;
 	database.findInCollection("game", {}, function(err, items) {
 		if (err) {
 			io.sockets.sockets[socket.id].emit('error', err);
@@ -29,8 +30,16 @@ io.sockets.on('connection', function (socket) {
 			io.emit('players', items[0].players);
 	});
 	socket.on('login', function(data) {
-		console.log(data);
 		var username = data;
+		if (req.session.username) {
+			console.log("Already logged in : " + req.session.username);
+		}
+		else {
+			req.session.username = username;
+			req.session.save(function() {
+				return;
+			});
+		}
 		socketId = socket.id
 		database.findOneInCollection("users", {"username" : username}, function(err, user) {
 			if (err) {
@@ -41,7 +50,7 @@ io.sockets.on('connection', function (socket) {
 				if (user) {
 					console.log("already logged");
 					io.sockets.sockets[socket.id].emit('used', "Username " + username  + " already used !");
-				}	
+				}
 				else {
 					database.findInCollection("game", {}, function(err, items) {
 						if (err) {
@@ -54,7 +63,7 @@ io.sockets.on('connection', function (socket) {
 								else {
 									database.insertInCollection("users", {"username" : username, "socketId" : socketId}, function(err, game) {
 										if (err)
-											io.sockets.sockets[socket.id].emit('error', err);	
+											io.sockets.sockets[socket.id].emit('error', err);
 										else {
 											io.sockets.sockets[socket.id].emit('loggedHost', username);
 											io.emit('players', [username]);
@@ -68,7 +77,6 @@ io.sockets.on('connection', function (socket) {
 								if (err)
 									io.sockets.sockets[socket.id].emit('error', err);
 							});
-	
 							database.updateInCollection("game", {"type" : "gameRoom"}, {"$push": {"players": username}}, function(err, updated) {
 								if (err)
 									io.sockets.sockets[socket.id].emit('error', err);
