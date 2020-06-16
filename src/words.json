@@ -29,6 +29,14 @@
         {"real" : "Douche", "intruder" : "Bain"},
         {"real" : "Twitter", "intruder" : "Instagram"},
         {"real" : "Thé", "intruder" : "Café"},
-        {"real" : "Twitter", "intruder" : "Instagram"}
+        {"real" : "Football Americain", "intruder" : "Rugby"},
+        {"real" : "Voiture", "intruder" : "Moto"},
+        {"real" : "Goku", "intruder" : "Gohan"},
+        {"real" : "Serie", "intruder" : "Film"},
+        {"real" : "Chine", "intruder" : "Japon"},
+        {"real" : "Courir", "intruder" : "Marcher"},
+        {"real" : "Dague", "intruder" : "Epee"},
+        {"real" : "Lune", "intruder" : "Etoile"},
+        {"real" : "Batman", "intruder" : "Robin"}
     ]
 }
