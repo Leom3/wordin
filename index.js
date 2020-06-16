@@ -193,7 +193,7 @@ io.sockets.on('connection', function (socket) {
 				var intruderName = players[intruder];
 				var msg = "";
 				if (intruder == mostVoted.id)
-					msg = "Imposter lost. It was " + intruderName + ".";
+					msg = "Imposter lost. It was " + intruderName + ".\n Words were : " + items[0].words[0].intruder + " and " + items[0].words[0].real;
 				else
 					msg = "Imposter won. It was " + intruderName + ".\n Words were : " + items[0].words[0].intruder + " and " + items[0].words[0].real;
 			}
