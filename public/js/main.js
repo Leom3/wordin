@@ -24,6 +24,14 @@ function getCookie(cname) {
   return "";
 }
 
+function delete_cookie(name) {
+  document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function set_cookie(name, value) {
+  document.cookie = name +'='+ value +'; Path=/;';
+}
+
 $('.usernameForm').submit((e) => {
   e.preventDefault(); // prevents page reloading
   var checkUser = getCookie("username");
@@ -34,7 +42,7 @@ $('.usernameForm').submit((e) => {
   else {
     socket.emit('login', $('#usernameInput').val());
     userName = $('#usernameInput').val();
-    document.cookie= "username=" + userName;
+    set_cookie("username", userName);
     $('#usernameInput').val('');
     $('#usernameInput').attr("readonly", true);
     $('.addUsernameButton').addClass("removed");
@@ -147,6 +155,7 @@ socket.on("removeVote", (data) => {
 });
 
 $(".resetButton").click(() => {
+  delete_cookie("username");
   socket.emit("reset", "");
 });
 
