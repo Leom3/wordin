@@ -132,11 +132,19 @@ io.sockets.on('connection', function (socket) {
 			else {
 				var wordComb = items[0].words[0];
 				var indexPlayer = items[0].players.indexOf(user);
-				console.log(wordComb);
-				if (indexPlayer == items[0].intruder)
-					io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
-				else
-					io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
+				var randTurn = Math.floor(Math.random() * 2);
+				if (randTurn == 0) {
+					if (indexPlayer == items[0].intruder)
+						io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
+					else
+						io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
+				}
+				else {
+					if (indexPlayer == items[0].intruder)
+						io.sockets.sockets[socket.id].emit('getWord', wordComb.real);
+					else
+						io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
+				}
 			}
 		});
 	});
@@ -187,7 +195,7 @@ io.sockets.on('connection', function (socket) {
 				if (intruder == mostVoted.id)
 					msg = "Imposter lost. It was " + intruderName + ".";
 				else
-					msg = "Imposter won. It was " + intruderName + ".";
+					msg = "Imposter won. It was " + intruderName + ".\n Words were : " + items[0].words[0].intruder + " and " + items[0].words[0].real;
 			}
 			io.emit("voteResults", {"winner" : winnerName, "msg" : msg});
 		});

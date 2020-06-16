@@ -81,7 +81,7 @@ socket.on('loggedHost', (msg) => {
 });
 
 socket.on('error', (msg) => {
-  console.error(msg);  
+  console.error(msg);
 });
 
 socket.on('startGame', (msg) => {
@@ -155,12 +155,12 @@ socket.on("removeVote", (data) => {
 });
 
 $(".resetButton").click(() => {
-  delete_cookie("username");
   socket.emit("reset", "");
 });
 
 socket.on("onReset", () => {
   isHost = false;
+  delete_cookie("username");
   $('#usernameList').html("");
   $(".playerList").html("");
   $(".votePlayerList").html("");
