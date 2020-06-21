@@ -107,13 +107,14 @@ io.sockets.on('connection', function (socket) {
 			}
 			nbPlayer = items[0].players.length;
 			var randPlayer = (Math.floor(Math.random() * nbPlayer));
+			var randWord = Math.floor(Math.random() * 2);
 			var words = items[0].words;
 			console.log("NBTURN : " + nbTurn);
 			if (nbTurn != 0) {
 				words.shift();
 				words.sort(() => Math.random() - 0.5);
 			}
-			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "words" : words}}, function(err, updated) {
+			database.updateInCollection("game", {"type" : "gameRoom"}, {"$set": {"intruder": randPlayer, "words" : words, "randWord" : randWord}}, function(err, updated) {
 				if (err)
 					io.sockets.sockets[socket.id].emit('error', err);
 				else if (updated.modifiedCount != 1) {
@@ -132,8 +133,7 @@ io.sockets.on('connection', function (socket) {
 			else {
 				var wordComb = items[0].words[0];
 				var indexPlayer = items[0].players.indexOf(user);
-				var randTurn = Math.floor(Math.random() * 2);
-				if (randTurn == 0) {
+				if (items[0].randWord == 0) {
 					if (indexPlayer == items[0].intruder)
 						io.sockets.sockets[socket.id].emit('getWord', wordComb.intruder);
 					else

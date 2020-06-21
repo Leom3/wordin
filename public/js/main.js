@@ -115,7 +115,7 @@ socket.on('getWord', (msg) => {
 })
 
 $('.sendWordForm').submit((e) => {
-  e.preventDefault(); // prevents page reloading  
+  e.preventDefault(); // prevents page reloading
   socket.emit('emitClue', {"user": userName, "msg": $('.wordInput').val()});
   $('.wordInput').val('');
   return false;
